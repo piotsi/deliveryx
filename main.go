@@ -22,7 +22,9 @@ func main() {
 
 	// Handlers
 	r.HandleFunc("/", indexHandler)
-	r.HandleFunc("/order/", restaurantsHandler).Methods("GET") // Narrow handling by GET
+	r.HandleFunc("/signin/", models.SignIn).Methods("POST") // Accept only POST request
+	r.HandleFunc("/signup/", models.SignUp)
+	r.HandleFunc("/order/", restaurantsHandler).Methods("GET") // Accept only GET request
 	r.HandleFunc("/order/{RestLink}/", orderHandler).Methods("GET")
 
 	// Static handlers
@@ -32,21 +34,27 @@ func main() {
 	// Return errors on TCP network
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", r)
+		log.Fatal("http.ListenAndServe: ", r)
 	}
+}
+
+// indexHandler handles /
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "index")
 }
 
 // restaurantsHandler handles /order
 func restaurantsHandler(w http.ResponseWriter, r *http.Request) {
 	rests, err := models.GetRestaurant()
 	if err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(500), 500) // Internal server error
+		log.Fatalf("models.GetRestaurant(): %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	err = templates.ExecuteTemplate(w, "restaurants.html", rests) // Execute parsed template
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("templates.ExecuteTemplate(): %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -55,19 +63,17 @@ func restaurantsHandler(w http.ResponseWriter, r *http.Request) {
 func orderHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	RestLink := vars["RestLink"]
+
 	menu, err := models.GetMenu(RestLink)
 	if err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(500), 500) // Internal server error
+		log.Fatalf("models.GetMenu(): %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	err = templates.ExecuteTemplate(w, "order.html", menu) // Execute parsed template
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "index")
 }

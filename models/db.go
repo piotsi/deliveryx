@@ -11,13 +11,13 @@ var db *sql.DB
 
 // InitDB initializes MySQL database, takes source name and returns nothing.
 func InitDB(source string) {
-	var openErr error
-	db, openErr = sql.Open("mysql", source)
-	if openErr != nil {
-		log.Fatal(openErr)
+	var err error // Short declaration needed here! Assignment in sql.Open() results in "runtime error: invalid memory address or nil pointer dereference"
+	db, err = sql.Open("mysql", source)
+	if err != nil {
+		log.Fatalf("sql.Open(): %s", err)
 	}
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("db.Ping(): %s", err)
 	}
 }

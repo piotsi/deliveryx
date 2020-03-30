@@ -14,7 +14,7 @@ type Restaurant struct {
 func GetRestaurant() ([]*Restaurant, error) {
 	rows, err := db.Query("SELECT RestID, RestName, RestAddress, RestLink FROM restaurants")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("db.Query(): %s", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -24,13 +24,14 @@ func GetRestaurant() ([]*Restaurant, error) {
 		rest := new(Restaurant)
 		err := rows.Scan(&rest.RestID, &rest.RestName, &rest.RestAddress, &rest.RestLink)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("rows.Scan(): %s", err)
 			return nil, err
 		}
 		rests = append(rests, rest)
 	}
-	if err = rows.Err(); err != nil {
-		log.Fatal(err)
+	err = rows.Err()
+	if err != nil {
+		log.Fatalf("rows.Err(): %s", err)
 		return nil, err
 	}
 	return rests, nil

@@ -19,7 +19,7 @@ func GetMenu(RestLink string) ([]*Item, error) {
     query := fmt.Sprintf("SELECT itemID, itemName, itemPrice, itemLink, restLink FROM items WHERE restLink='%s'", RestLink)
     rows, err := db.Query(query)
     if err != nil {
-        log.Fatal(err)
+        log.Fatalf("db.Query(): %s", err)
         return nil, err
     }
     defer rows.Close()
@@ -29,13 +29,14 @@ func GetMenu(RestLink string) ([]*Item, error) {
 		item := new(Item)
 		err := rows.Scan(&item.ItemID, &item.ItemName, &item.ItemPrice, &item.ItemLink, &item.RestLink)
 		if err != nil {
-            log.Fatal(err)
+            log.Fatalf("rows.Scan(): %s", err)
 			return nil, err
 		}
 		items = append(items, item)
 	}
-	if err = rows.Err(); err != nil {
-        log.Fatal(err)
+    err = rows.Err()
+	if err != nil {
+        log.Fatalf("rows.Err(): %s", err)
 		return nil, err
 	}
 	return items, nil
