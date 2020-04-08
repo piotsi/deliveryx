@@ -9,26 +9,30 @@ import (
 )
 
 func main() {
-	// Gorilla mux router
-	r := mux.NewRouter().StrictSlash(true) // Add trailing slash to the end of path
+	// Gorilla mux router, StrictSlash() adds trailing slash to the end of path
+	router := mux.NewRouter().StrictSlash(true)
 
 	// Database initialization
 	models.InitDB("root:mysqlPSWD213@(127.0.0.1:3306)/root")
 
-	// Handlers
-	r.HandleFunc("/", models.IndexHandler)
-	r.HandleFunc("/signin/", models.SignIn).Methods("POST") // Accept only POST request
-	r.HandleFunc("/signup/", models.SignUp).Methods("POST")
-	r.HandleFunc("/order/", models.RestaurantsHandler).Methods("GET") // Accept only GET request
-	r.HandleFunc("/order/{RestLink}/", models.OrderHandler).Methods("GET")
+	// Handlers, Methods() accepts only matched methods
+	router.HandleFunc("/signmein/", models.SignIn).Methods("POST")
+	router.HandleFunc("/signmeup/", models.SignUp).Methods("POST")
+	router.HandleFunc("/", models.IndexHandler)
+	router.HandleFunc("/signin/", models.SigninHandler)
+	router.HandleFunc("/signup/", models.SignupHandler)
+	router.HandleFunc("/order/", models.RestaurantsHandler)
+	router.HandleFunc("/order/{RestLink}/", models.OrderHandler)
 
 	// Static handlers
-	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./images/")))) // Handle static files in images folder
-	r.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./css/"))))          // Handle static files in css folder
+	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./images/")))) // Handle static files in images folder
+	router.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./css/"))))          // Handle static files in css folder
+
+	http.Handle("/", router)
 
 	// Return errors on TCP network
-	err := http.ListenAndServe(":8080", r)
+	err := http.ListenAndServe(":8080", router)
 	if err != nil {
-		log.Fatal("http.ListenAndServe: ", r)
+		log.Fatal("http.ListenAndServe: ", router)
 	}
 }
