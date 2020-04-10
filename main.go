@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"site/models"
+	"site/handlers"
 
 	"github.com/gorilla/mux"
 )
@@ -13,16 +13,18 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	// Database initialization
-	models.InitDB("root:mysqlPSWD213@(127.0.0.1:3306)/root")
+	handlers.InitDB("root:mysqlPSWD213@(127.0.0.1:3306)/root")
 
 	// Handlers, Methods() accepts only matched methods
-	router.HandleFunc("/signmein/", models.SignIn).Methods("POST")
-	router.HandleFunc("/signmeup/", models.SignUp).Methods("POST")
-	router.HandleFunc("/", models.IndexHandler)
-	router.HandleFunc("/signin/", models.SigninHandler)
-	router.HandleFunc("/signup/", models.SignupHandler)
-	router.HandleFunc("/order/", models.RestaurantsHandler)
-	router.HandleFunc("/order/{RestLink}/", models.OrderHandler)
+	router.HandleFunc("/signmein/", handlers.SignIn).Methods("POST")
+	router.HandleFunc("/signmeup/", handlers.SignUp).Methods("POST")
+	router.HandleFunc("/signmeout/", handlers.SignMeOut)
+	router.HandleFunc("/", handlers.IndexPageHandler)
+	router.HandleFunc("/signin/", handlers.SigninPageHandler)
+	router.HandleFunc("/signup/", handlers.SignupPageHandler)
+	router.HandleFunc("/order/", handlers.RestaurantsPageHandler)
+	router.HandleFunc("/order/{RestLink}/", handlers.OrderPageHandler)
+	router.HandleFunc("/account/", handlers.AccountPageHandler)
 
 	// Static handlers
 	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./images/")))) // Handle static files in images folder

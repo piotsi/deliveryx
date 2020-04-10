@@ -1,4 +1,4 @@
-package models
+package handlers
 
 import "log"
 
@@ -10,8 +10,8 @@ type Restaurant struct {
 	RestLink    string
 }
 
-// GetRestaurant returns restaurants list
-func GetRestaurant() ([]*Restaurant, error) {
+// GetRestaurants returns restaurants list
+func GetRestaurants() ([]*Restaurant, error) {
 	rows, err := db.Query("SELECT RestID, RestName, RestAddress, RestLink FROM restaurants")
 	if err != nil {
 		log.Fatalf("db.Query(): %s", err)

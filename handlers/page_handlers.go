@@ -1,6 +1,7 @@
-package models
+package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -15,13 +16,13 @@ var templates = template.Must(template.ParseFiles(
 	"templates/signin.html",
 	"templates/signup.html"))
 
-// IndexHandler handles /
-func IndexHandler(response http.ResponseWriter, request *http.Request) {
+// IndexPageHandler handles /
+func IndexPageHandler(response http.ResponseWriter, request *http.Request) {
 	http.Redirect(response, request, "/order", http.StatusFound)
 }
 
-// SigninHandler handles /signin page
-func SigninHandler(response http.ResponseWriter, request *http.Request) {
+// SigninPageHandler handles /signin page
+func SigninPageHandler(response http.ResponseWriter, request *http.Request) {
 	err := templates.ExecuteTemplate(response, "signin.html", "") // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
@@ -29,8 +30,8 @@ func SigninHandler(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-// SignupHandler handles /signup page
-func SignupHandler(response http.ResponseWriter, request *http.Request) {
+// SignupPageHandler handles /signup page
+func SignupPageHandler(response http.ResponseWriter, request *http.Request) {
 	err := templates.ExecuteTemplate(response, "signup.html", "") // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
@@ -38,35 +39,39 @@ func SignupHandler(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-// RestaurantsHandler handles /order page
-func RestaurantsHandler(response http.ResponseWriter, request *http.Request) {
-	rests, err := GetRestaurant()
+// RestaurantsPageHandler handles /order page
+func RestaurantsPageHandler(response http.ResponseWriter, request *http.Request) {
+	rests, err := GetRestaurants()
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	err = templates.ExecuteTemplate(response, "restaurants.html", rests) // Execute parsed template
+	err = templates.ExecuteTemplate(response, "restaurants.html", map[string]interface{}{"Username": GetUserName(request), "Rest": rests}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-// OrderHandler handles /order/(RestLink) page
-func OrderHandler(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	RestLink := vars["RestLink"]
+// OrderPageHandler handles /order/(RestLink) page
+func OrderPageHandler(response http.ResponseWriter, request *http.Request) {
+	routeVars := mux.Vars(request)
+	restLink := routeVars["RestLink"]
 
-	menu, err := GetMenu(RestLink)
+	menu, err := GetMenu(restLink)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = templates.ExecuteTemplate(response, "order.html", menu) // Execute parsed template
+	err = templates.ExecuteTemplate(response, "order.html", map[string]interface{}{"Username": GetUserName(request), "Menu": menu}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+// AccountPageHandler handles /account page
+func AccountPageHandler(response http.ResponseWriter, request *http.Request) {
+	fmt.Fprintf(response, "User logged: %s", GetUserName(request))
 }
