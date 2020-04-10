@@ -39,22 +39,16 @@
     </nav>
     <div class="container">
         <div class="py-5 text-center">
-            <h2>Sign-up</h2>
+            <h2>Edit account</h2>
         </div>
-        <form method="post" action="/signmeup/">
-            <!-- <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div> -->
+        <form method="post" action="/accountedit/">
             <div class="form-group">
-                <input type="text" class="form-control" id="userName" placeholder="Username" name="userName">
+                <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" id="userPassword" placeholder="Password" name="userPassword">
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign-up</button>
-            <a class="btn btn-outline-secondary btn-lg btn-block" href="/signin" role="button">Already have an account?</a>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
         </form>
     </div>
 

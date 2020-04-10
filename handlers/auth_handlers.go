@@ -22,18 +22,24 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // SignIn handles /signmein
 func SignIn(response http.ResponseWriter, request *http.Request) {
-    session, _ := store.Get(request, "cookie-name")
+    session, err := store.Get(request, "cookie-name")
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
     // Get credentials from the request
     credentials := new(Credentials)
-    err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+    err = request.ParseForm() // Parse POST form into request.PostForm and request.Form
     if err != nil {
-        log.Fatal(err.Error())
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
     }
     decoder := schema.NewDecoder()
     err = decoder.Decode(credentials, request.PostForm) // Decode credentials from POST form of request to credentials instance
     if err != nil {
-        log.Fatal(err.Error())
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
     }
 
     session.Values["authenticated"] = true
@@ -62,25 +68,28 @@ func SignIn(response http.ResponseWriter, request *http.Request) {
         http.Error(response, "Wrong password!", http.StatusUnauthorized)
         return
 	}
-    session.Save(request, response)
+    err = session.Save(request, response)
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
     log.Printf("%s logged in!", credentials.UserName)
     http.Redirect(response, request, "/", http.StatusFound)
 }
 
 // SignUp handles /signmeup
 func SignUp(response http.ResponseWriter, request *http.Request) {
-    // session, _ := store.Get(request, "cookie-name")
-
     // Get credentials from the request
     credentials := new(Credentials)
     err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
     if err != nil {
-        log.Fatal(err.Error())
+        http.Error(response, err.Error(), http.StatusInternalServerError)
     }
     decoder := schema.NewDecoder()
     err = decoder.Decode(credentials, request.PostForm) // Decode credentials from POST form of request to credentials instance
     if err != nil {
-        log.Fatal(err.Error())
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
     }
 
     // Encrypt password
@@ -98,20 +107,45 @@ func SignUp(response http.ResponseWriter, request *http.Request) {
 
 // SignMeOut handles /signmeout
 func SignMeOut(response http.ResponseWriter, request *http.Request) {
-    session, _ := store.Get(request, "cookie-name")
+    session, err := store.Get(request, "cookie-name")
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
     session.Values["authenticated"] = false
     log.Printf("%s logged out!", session.Values["username"].(string))
 
-    session.Save(request, response)
+    err = session.Save(request, response)
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+    }
     http.Redirect(response, request, "/", http.StatusFound)
 }
 
 // GetUserName returns authenticated user's UserName
 func GetUserName(request *http.Request) (UserName string) {
-    session, _ := store.Get(request, "cookie-name")
+    session, err := store.Get(request, "cookie-name")
+    if err != nil {
+        log.Fatal(err.Error())
+        return
+    }
     if session.Values["authenticated"] == true {
         return session.Values["username"].(string)
     }
     return
+}
+
+// IsAuthenticated checks whether user is authenticated
+func IsAuthenticated(request *http.Request) bool {
+    session, err := store.Get(request, "cookie-name")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	auth, ok := session.Values["authenticated"].(bool)
+    if !ok || !auth {
+        return false
+    }
+    return true
 }

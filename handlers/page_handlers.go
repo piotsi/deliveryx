@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -14,7 +14,8 @@ var templates = template.Must(template.ParseFiles(
 	"templates/restaurants.html",
 	"templates/order.html",
 	"templates/signin.html",
-	"templates/signup.html"))
+	"templates/signup.html",
+	"templates/account.html"))
 
 // IndexPageHandler handles /
 func IndexPageHandler(response http.ResponseWriter, request *http.Request) {
@@ -23,7 +24,7 @@ func IndexPageHandler(response http.ResponseWriter, request *http.Request) {
 
 // SigninPageHandler handles /signin page
 func SigninPageHandler(response http.ResponseWriter, request *http.Request) {
-	err := templates.ExecuteTemplate(response, "signin.html", "") // Execute parsed template
+	err := templates.ExecuteTemplate(response, "signin.html", map[string]interface{}{"Username": GetUserName(request)}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -32,7 +33,7 @@ func SigninPageHandler(response http.ResponseWriter, request *http.Request) {
 
 // SignupPageHandler handles /signup page
 func SignupPageHandler(response http.ResponseWriter, request *http.Request) {
-	err := templates.ExecuteTemplate(response, "signup.html", "") // Execute parsed template
+	err := templates.ExecuteTemplate(response, "signup.html", map[string]interface{}{"Username": GetUserName(request)}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -73,5 +74,13 @@ func OrderPageHandler(response http.ResponseWriter, request *http.Request) {
 
 // AccountPageHandler handles /account page
 func AccountPageHandler(response http.ResponseWriter, request *http.Request) {
-	fmt.Fprintf(response, "User logged: %s", GetUserName(request))
+	if !IsAuthenticated(request) {
+		http.Error(response, "Forbidden", http.StatusForbidden)
+		return
+	}
+	err := templates.ExecuteTemplate(response, "account.html", map[string]interface{}{"Username": GetUserName(request)}) // Execute parsed template
+	if err != nil {
+		log.Fatalf("templates.ExecuteTemplate: %s", err)
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
 }
