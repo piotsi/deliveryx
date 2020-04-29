@@ -19,6 +19,7 @@ func main() {
 	router.HandleFunc("/signmein/", handlers.SignIn).Methods("POST")
 	router.HandleFunc("/signmeup/", handlers.SignUp).Methods("POST")
 	router.HandleFunc("/accountedit/", handlers.AccountEdit).Methods("POST")
+	router.HandleFunc("/restaurantedit/", handlers.RestaurantEdit).Methods("POST")
 	router.HandleFunc("/signmeout/", handlers.SignMeOut)
 	router.HandleFunc("/", handlers.IndexPageHandler)
 	router.HandleFunc("/signin/", handlers.SigninPageHandler)

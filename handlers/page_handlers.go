@@ -78,7 +78,7 @@ func AccountPageHandler(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, "Forbidden", http.StatusForbidden)
 		return
 	}
-	err := templates.ExecuteTemplate(response, "account.html", map[string]interface{}{"Username": GetUserName(request)}) // Execute parsed template
+	err := templates.ExecuteTemplate(response, "account.html", map[string]interface{}{"Username": GetUserName(request), "Restaurant": GetRestaurantDetails(request)}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)

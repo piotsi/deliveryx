@@ -46,10 +46,32 @@
                 <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" id="userPassword" placeholder="Password" name="userPassword">
+                <input type="password" class="form-control" placeholder="Password" name="userPassword">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+        </form>
+        {{if .Restaurant.RestName}}
+        <div class="py-5 text-center">
+            <h4>Edit your restaurant</h4>
+        </div>
+        <!-- <input type="file" name="{{.Restaurant.RestLink}}" value="" accept="/image/png"> -->
+        <form method="post" action="/restaurantedit/">
+            <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
+
+            <p></p>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="{{.Restaurant.RestName}}" name="restName" value="{{.Restaurant.RestName}}">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="{{.Restaurant.RestAddress}}" name="restAddress" value="{{.Restaurant.RestAddress}}">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
             </div>
             <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
         </form>
+        {{end}}
     </div>
 
 </body>
