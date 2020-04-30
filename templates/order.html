@@ -40,20 +40,21 @@
     <p></p>
     <div class="container">
         <div class="row">
-          {{range .Menu}}
-              <div class="col-sm-6">
-                  <div class="card text-right">
-                      <img class="card-img" src="../../images/items/{{.RestLink}}/{{.ItemLink}}.png" alt="{{.ItemLink}}">
-                      <div class="card-body">
-                          <h5 class="card-title">{{.ItemName}}</h5>
-                          <p class="card-text">{{.ItemPrice}}PLN</p>
-                          <a href="#" class="btn btn-primary">Add</a>
-                      </div>
-                  </div>
-                  <p></p>
-              </div>
-          {{end}}
-    </div>
+            <div class="col-6">
+                <div class="list-group" id="list-tab" role="tablist">
+                    {{range .Menu}}
+                    <a class="list-group-item list-group-item-action" id="list-{{.ItemLink}}-list" data-toggle="list" href="#{{.ItemLink}}" role="tab" aria-controls="{{.ItemLink}}">{{.ItemName}}</a>
+                    {{end}}
+                </div>
+            </div>
+                <div class="col-6">
+                <div class="tab-content" id="nav-tabContent">
+                    {{range .Menu}}
+                    <div class="tab-pane fade" id="{{.ItemLink}}" role="tabpanel" aria-labelledby="list-{{.ItemLink}}-list">{{.ItemPrice}}PLN</div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
 </div>
 </body>
 
