@@ -46,20 +46,17 @@
                 <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" name="userPassword">
+                <input type="password" class="form-control" id="passwordControlForm" placeholder="Password" name="userPassword">
+                <small id="passwordHelpInline" class="text-muted">Password should be atleast 8 characters long.</small>
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
         </form>
         {{if .Restaurant.RestName}}
         <div class="py-5 text-center">
-            <h4>Edit your restaurant</h4>
+            <h4>Edit your restaurant details</h4>
         </div>
-        <!-- <input type="file" name="{{.Restaurant.RestLink}}" value="" accept="/image/png"> -->
         <form method="post" action="/restaurantedit/">
-            <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
-
-            <p></p>
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="{{.Restaurant.RestName}}" name="restName" value="{{.Restaurant.RestName}}">
             </div>
@@ -69,7 +66,17 @@
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
             </div>
+
             <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+        </form>
+        <p></p>
+        <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
+        <form method="post" action="/logoedit/" enctype="multipart/form-data">
+            <input type="hidden" name="imageLink" value="{{.Restaurant.RestLink}}">
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="inputFile" name="imageFile" accept="/image/png">
+            </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" value="upload">Change logo</button>
         </form>
         {{end}}
     </div>

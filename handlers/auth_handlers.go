@@ -22,7 +22,7 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // SignIn handles /signmein
 func SignIn(response http.ResponseWriter, request *http.Request) {
-    session, err := store.Get(request, "cookie_name")
+    session, err := store.Get(request, "cookiename")
     if err != nil {
         http.Error(response, err.Error(), http.StatusInternalServerError)
         return
@@ -107,7 +107,7 @@ func SignUp(response http.ResponseWriter, request *http.Request) {
 
 // SignMeOut handles /signmeout
 func SignMeOut(response http.ResponseWriter, request *http.Request) {
-    session, err := store.Get(request, "cookie_name")
+    session, err := store.Get(request, "cookiename")
     if err != nil {
         http.Error(response, err.Error(), http.StatusInternalServerError)
         return
@@ -125,7 +125,7 @@ func SignMeOut(response http.ResponseWriter, request *http.Request) {
 
 // GetUserName returns authenticated user's UserName
 func GetUserName(request *http.Request) (UserName string) {
-    session, err := store.Get(request, "cookie_name")
+    session, err := store.Get(request, "cookiename")
     if err != nil {
         log.Fatal(err.Error())
         return
@@ -138,7 +138,7 @@ func GetUserName(request *http.Request) (UserName string) {
 
 // IsAuthenticated checks whether user is authenticated
 func IsAuthenticated(request *http.Request) bool {
-    session, err := store.Get(request, "cookie_name")
+    session, err := store.Get(request, "cookiename")
 	if err != nil {
 		log.Fatal(err.Error())
 	}

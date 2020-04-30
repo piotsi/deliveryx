@@ -1,7 +1,10 @@
 package handlers
 
 import (
+    "os"
     "fmt"
+    "log"
+    "io/ioutil"
     "net/http"
     "golang.org/x/crypto/bcrypt"
     "github.com/gorilla/schema"
@@ -32,7 +35,7 @@ func AccountEdit(response http.ResponseWriter, request *http.Request) {
         http.Error(response, err.Error(), http.StatusInternalServerError)
         return
     }
-    http.Redirect(response, request, "/", http.StatusFound)
+    http.Redirect(response, request, "/account", http.StatusFound)
 }
 
 // RestaurantEdit edits restaurant details
@@ -59,7 +62,55 @@ func RestaurantEdit(response http.ResponseWriter, request *http.Request) {
         http.Error(response, err.Error(), http.StatusInternalServerError)
         return
     }
-    http.Redirect(response, request, "/", http.StatusFound)
+    http.Redirect(response, request, "/account", http.StatusFound)
+}
+
+// LogoEdit changes restaurants' logo
+func LogoEdit(response http.ResponseWriter, request *http.Request)  {
+    // Parse file from request
+    err := request.ParseMultipartForm(1)
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    imageLink := request.FormValue("imageLink")
+
+    file, handler, err := request.FormFile("imageFile")
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    defer file.Close()
+
+    // Create temporary file
+    tempFile, err := ioutil.TempFile("images/restaurants/", "*.png")
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    defer tempFile.Close()
+
+    // Read uploaded file into byte arrat
+    fileBytes, err := ioutil.ReadAll(file)
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    // Write read byte array into temporary file
+    tempFile.Write(fileBytes)
+
+    // Rename tempfile to old logo name
+    // If the file exists it will overwrite old one, if it doesn't exist it will only change name of the new one
+    newFilePathName := fmt.Sprintf("images/restaurants/%s.png", imageLink)
+    err = os.Rename(tempFile.Name(), newFilePathName)
+    if err != nil {
+        http.Error(response, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    log.Printf("%s file uploaded", handler.Filename)
+    http.Redirect(response, request, "/account", http.StatusFound)
 }
 
 // GetRestaurantDetails obtains restaurant details of which logged user is the owner of
