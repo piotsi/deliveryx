@@ -116,7 +116,7 @@ func LogoEdit(response http.ResponseWriter, request *http.Request) {
 
 // ItemEdit handles changing, adding and removing items
 func ItemEdit(response http.ResponseWriter, request *http.Request) {
-	// Get credentials from the request
+	// Get details from the request
 	details := new(Item)
 	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
 	if err != nil {
@@ -131,6 +131,31 @@ func ItemEdit(response http.ResponseWriter, request *http.Request) {
 
 	// Change details in the database
 	query := fmt.Sprintf("UPDATE items SET ItemName='%s', ItemPrice='%s', ItemDescription='%s' WHERE ItemLink='%s'", details.ItemName, details.ItemPrice, details.ItemDescription, details.ItemLink)
+	_, err = db.Query(query)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(response, request, "/account", http.StatusFound)
+}
+
+// ItemRemove removes item specified in the request form
+func ItemRemove(response http.ResponseWriter, request *http.Request) {
+	// Get details from the request
+	details := new(Item)
+	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(details, request.PostForm) // Decode details from POST form of request to restaurant instance
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Change details in the database
+	query := fmt.Sprintf("DELETE FROM items WHERE ItemLink='%s'", details.ItemLink)
 	_, err = db.Query(query)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
