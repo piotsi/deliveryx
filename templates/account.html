@@ -63,11 +63,11 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text">Password</span>
                           </div>
-                          <input type="password" class="form-control" id="passwordControlForm" placeholder="Password" name="userPassword">
+                          <input type="password" class="form-control" id="passwordControlForm" placeholder="New password" name="userPassword">
                       </div>
                       <small id="passwordHelpInline" class="text-muted">Password should be atleast 8 characters long.</small>
 
-                      <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+                      <button type="submit" class="btn btn-success btn-lg btn-block">Edit details</button>
                   </form>
               </div>
             </div>
@@ -108,7 +108,7 @@
                       <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Edit details</button>
                 </form>
               </div>
             </div>
@@ -132,7 +132,7 @@
                       <div class="form-group">
                           <input type="file" class="form-control-file" id="inputFile" name="imageFile" accept="/image/png">
                       </div>
-                  <button type="submit" class="btn btn-primary btn-lg btn-block" value="upload">Change logo</button>
+                  <button type="submit" class="btn btn-success btn-lg btn-block" value="upload">Change logo</button>
                   </form>
               </div>
             </div>
@@ -175,10 +175,19 @@
                       </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">Edit item details</button>
-                    {{end}}
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Link</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.ItemLink}}" name="itemLink" value="{{.ItemLink}}" readonly>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg">Edit item details</button>
+                    <button type="submit" class="btn btn-outline-danger btn-lg" formaction="/itemremove/">Remove item</button>
                 </form>
 
+                <p></p>
+                {{end}}
 
               </div>
             </div>

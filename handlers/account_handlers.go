@@ -114,6 +114,31 @@ func LogoEdit(response http.ResponseWriter, request *http.Request) {
 	http.Redirect(response, request, "/account", http.StatusFound)
 }
 
+// ItemEdit handles changing, adding and removing items
+func ItemEdit(response http.ResponseWriter, request *http.Request) {
+	// Get credentials from the request
+	details := new(Item)
+	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(details, request.PostForm) // Decode details from POST form of request to restaurant instance
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Change details in the database
+	query := fmt.Sprintf("UPDATE items SET ItemName='%s', ItemPrice='%s', ItemDescription='%s' WHERE ItemLink='%s'", details.ItemName, details.ItemPrice, details.ItemDescription, details.ItemLink)
+	_, err = db.Query(query)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(response, request, "/account", http.StatusFound)
+}
+
 // GetRestaurantDetails obtains restaurant details of which logged user is the owner of
 func GetRestaurantDetails(request *http.Request) *Restaurant {
 	RestDetails := new(Restaurant)

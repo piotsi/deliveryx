@@ -1,3 +1,3 @@
 # DeliveryX
 
-Simple app made with gorilla toolkit.
+Simple app made with help of Gorilla toolkit.
