@@ -37,50 +37,130 @@
             {{end}}
         </div>
     </nav>
+    <p></p>
     <div class="container">
-        <div class="py-5 text-center">
-            <h2>Edit account</h2>
-        </div>
-        <form method="post" action="/accountedit/">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" id="passwordControlForm" placeholder="Password" name="userPassword">
-                <small id="passwordHelpInline" class="text-muted">Password should be atleast 8 characters long.</small>
+        <div class="accordion" id="accountEdit">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true" aria-controls="collapseUser">
+                  Edit account
+                </button>
+              </h2>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
-        </form>
-        {{if .Restaurant.RestName}}
-        <div class="py-5 text-center">
-            <h4>Edit your restaurant details</h4>
-        </div>
-        <form method="post" action="/restaurantedit/">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{.Restaurant.RestName}}" name="restName" value="{{.Restaurant.RestName}}">
+            <div id="collapseUser" class="collapse show" aria-labelledby="headingOne" data-parent="#accountEdit">
+              <div class="card-body">
+                  <form method="post" action="/accountedit/">
+                      <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">Login</span>
+                          </div>
+                              <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
+                      </div>
+
+                      <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">Password</span>
+                          </div>
+                          <input type="password" class="form-control" id="passwordControlForm" placeholder="Password" name="userPassword">
+                      </div>
+                      <small id="passwordHelpInline" class="text-muted">Password should be atleast 8 characters long.</small>
+
+                      <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+                  </form>
+              </div>
             </div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{.Restaurant.RestAddress}}" name="restAddress" value="{{.Restaurant.RestAddress}}">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
+          </div>
+
+
+          {{if .Restaurant.RestName}}
+          <div class="card">
+            <div class="card-header" id="headingTwo">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseRestaurant" aria-expanded="false" aria-controls="collapseRestaurant">
+                  Edit your restaurant details
+                </button>
+              </h2>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
-        </form>
-        <p></p>
-        <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
-        <form method="post" action="/logoedit/" enctype="multipart/form-data">
-            <input type="hidden" name="imageLink" value="{{.Restaurant.RestLink}}">
-            <div class="form-group">
-                <input type="file" class="form-control-file" id="inputFile" name="imageFile" accept="/image/png">
+            <div id="collapseRestaurant" class="collapse" aria-labelledby="headingTwo" data-parent="#accountEdit">
+              <div class="card-body">
+                  <form method="post" action="/restaurantedit/">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Name</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestName}}" name="restName" value="{{.Restaurant.RestName}}">
+                    </div>
+
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Address</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestAddress}}" name="restAddress" value="{{.Restaurant.RestAddress}}">
+                    </div>
+
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Link</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Edit details</button>
+                </form>
+              </div>
             </div>
-        <button type="submit" class="btn btn-primary btn-lg btn-block" value="upload">Change logo</button>
-        </form>
-        {{end}}
+          </div>
+
+
+          <div class="card">
+            <div class="card-header" id="headingThree">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseLogo" aria-expanded="false" aria-controls="collapseLogo">
+                  Edit your restaurant logo
+                </button>
+              </h2>
+            </div>
+
+            <div id="collapseLogo" class="collapse" aria-labelledby="headingThree" data-parent="#accountEdit">
+              <div class="card-body">
+                  <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
+                  <form method="post" action="/logoedit/" enctype="multipart/form-data">
+                      <input type="hidden" name="imageLink" value="{{.Restaurant.RestLink}}">
+                      <div class="form-group">
+                          <input type="file" class="form-control-file" id="inputFile" name="imageFile" accept="/image/png">
+                      </div>
+                  <button type="submit" class="btn btn-primary btn-lg btn-block" value="upload">Change logo</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header" id="headingFour">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseItems" aria-expanded="false" aria-controls="collapseItems">
+                  Edit your restaurant items
+                </button>
+              </h2>
+            </div>
+
+            <div id="collapseItems" class="collapse" aria-labelledby="headingFour" data-parent="#accountEdit">
+              <div class="card-body">
+
+
+
+
+              </div>
+            </div>
+          </div>
+          {{end}}
+
+        </div>
+
     </div>
-
 </body>
 
 </html>

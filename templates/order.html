@@ -50,7 +50,22 @@
                 <div class="col-6">
                 <div class="tab-content" id="nav-tabContent">
                     {{range .Menu}}
-                    <div class="tab-pane fade" id="{{.ItemLink}}" role="tabpanel" aria-labelledby="list-{{.ItemLink}}-list">{{.ItemPrice}}PLN</div>
+                    <div class="tab-pane fade" id="{{.ItemLink}}" role="tabpanel" aria-labelledby="list-{{.ItemLink}}-list">
+                        <h3>{{.ItemPrice}}PLN</h3>
+                        <form>
+                            <div class="form-group">
+                            <label for="exampleFormControlSelect1">Quantity:</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add to basket</button>
+                        </form>
+                    </div>
                     {{end}}
                 </div>
             </div>
