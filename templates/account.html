@@ -149,8 +149,35 @@
 
             <div id="collapseItems" class="collapse" aria-labelledby="headingFour" data-parent="#accountEdit">
               <div class="card-body">
+                  {{range .Item}}
+                  <form method="post" action="/itemedit/">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Name</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.ItemName}}" name="itemName" value="{{.ItemName}}">
+                    </div>
 
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Description</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.ItemDescription}}" name="itemDescription" value="{{.ItemDescription}}">
+                    </div>
 
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Price</span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="{{.ItemPrice}}" name="itemPrice" value="{{.ItemPrice}}">
+                      <div class="input-group-append">
+                          <span class="input-group-text">PLN</span>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Edit item details</button>
+                    {{end}}
+                </form>
 
 
               </div>

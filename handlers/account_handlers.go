@@ -1,127 +1,145 @@
 package handlers
 
 import (
-    "os"
-    "fmt"
-    "log"
-    "io/ioutil"
-    "net/http"
-    "golang.org/x/crypto/bcrypt"
-    "github.com/gorilla/schema"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/gorilla/schema"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // AccountEdit edits account details
 func AccountEdit(response http.ResponseWriter, request *http.Request) {
-    // Get credentials from the request
-    credentials := new(Credentials)
-    err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-    }
-    decoder := schema.NewDecoder()
-    err = decoder.Decode(credentials, request.PostForm) // Decode credentials from POST form of request to credentials instance
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	// Get credentials from the request
+	credentials := new(Credentials)
+	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(credentials, request.PostForm) // Decode credentials from POST form of request to credentials instance
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    // Encrypt password
-    hashedUserPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.UserPassword), 8)
+	// Encrypt password
+	hashedUserPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.UserPassword), 8)
 
-    // Insert credentials into the database
-    query := fmt.Sprintf("UPDATE users SET userPassword='%s' WHERE userName='%s'", string(hashedUserPassword), credentials.UserName)
-    _, err = db.Query(query)
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    http.Redirect(response, request, "/account", http.StatusFound)
+	// Insert credentials into the database
+	query := fmt.Sprintf("UPDATE users SET userPassword='%s' WHERE userName='%s'", string(hashedUserPassword), credentials.UserName)
+	_, err = db.Query(query)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(response, request, "/account", http.StatusFound)
 }
 
 // RestaurantEdit edits restaurant details
 func RestaurantEdit(response http.ResponseWriter, request *http.Request) {
-    owner := GetUserName(request)
+	owner := GetUserName(request)
 
-    // Get credentials from the request
-    details := new(Restaurant)
-    err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-    }
-    decoder := schema.NewDecoder()
-    err = decoder.Decode(details, request.PostForm) // Decode details from POST form of request to restaurant instance
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	// Get credentials from the request
+	details := new(Restaurant)
+	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(details, request.PostForm) // Decode details from POST form of request to restaurant instance
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    // Change details in the database
-    query := fmt.Sprintf("UPDATE restaurants SET RestName='%s', RestAddress='%s', RestLink='%s' WHERE RestOwner='%s'", details.RestName, details.RestAddress, details.RestLink, owner)
-    _, err = db.Query(query)
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    http.Redirect(response, request, "/account", http.StatusFound)
+	// Change details in the database
+	query := fmt.Sprintf("UPDATE restaurants SET RestName='%s', RestAddress='%s', RestLink='%s' WHERE RestOwner='%s'", details.RestName, details.RestAddress, details.RestLink, owner)
+	_, err = db.Query(query)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(response, request, "/account", http.StatusFound)
 }
 
 // LogoEdit changes restaurants' logo
-func LogoEdit(response http.ResponseWriter, request *http.Request)  {
-    // Parse file from request
-    err := request.ParseMultipartForm(1)
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
+func LogoEdit(response http.ResponseWriter, request *http.Request) {
+	// Parse file from request
+	err := request.ParseMultipartForm(1)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    imageLink := request.FormValue("imageLink")
+	imageLink := request.FormValue("imageLink")
 
-    file, handler, err := request.FormFile("imageFile")
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    defer file.Close()
+	file, handler, err := request.FormFile("imageFile")
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
 
-    // Create temporary file
-    tempFile, err := ioutil.TempFile("images/restaurants/", "*.png")
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    defer tempFile.Close()
+	// Create temporary file
+	tempFile, err := ioutil.TempFile("images/restaurants/", "*.png")
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer tempFile.Close()
 
-    // Read uploaded file into byte arrat
-    fileBytes, err := ioutil.ReadAll(file)
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    // Write read byte array into temporary file
-    tempFile.Write(fileBytes)
+	// Read uploaded file into byte arrat
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Write read byte array into temporary file
+	tempFile.Write(fileBytes)
 
-    // Rename tempfile to old logo name
-    // If the file exists it will overwrite old one, if it doesn't exist it will only change name of the new one
-    newFilePathName := fmt.Sprintf("images/restaurants/%s.png", imageLink)
-    err = os.Rename(tempFile.Name(), newFilePathName)
-    if err != nil {
-        http.Error(response, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	// Rename tempfile to old logo name
+	// If the file exists it will overwrite old one, if it doesn't exist it will only change name of the new one
+	newFilePathName := fmt.Sprintf("images/restaurants/%s.png", imageLink)
+	err = os.Rename(tempFile.Name(), newFilePathName)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    log.Printf("%s file uploaded", handler.Filename)
-    http.Redirect(response, request, "/account", http.StatusFound)
+	log.Printf("%s file uploaded", handler.Filename)
+	http.Redirect(response, request, "/account", http.StatusFound)
 }
 
 // GetRestaurantDetails obtains restaurant details of which logged user is the owner of
-func GetRestaurantDetails(request *http.Request) (*Restaurant) {
-    RestDetails := new(Restaurant)
-    owner := GetUserName(request)
+func GetRestaurantDetails(request *http.Request) *Restaurant {
+	RestDetails := new(Restaurant)
+	owner := GetUserName(request)
 
-    query := fmt.Sprintf("SELECT RestName, RestAddress, RestLink FROM restaurants WHERE RestOwner='%s'", owner)
-    row := db.QueryRow(query)
+	query := fmt.Sprintf("SELECT RestName, RestAddress, RestLink FROM restaurants WHERE RestOwner='%s'", owner)
+	row := db.QueryRow(query)
 
-    row.Scan(&RestDetails.RestName, &RestDetails.RestAddress, &RestDetails.RestLink)
+	row.Scan(&RestDetails.RestName, &RestDetails.RestAddress, &RestDetails.RestLink)
 
-    return RestDetails
+	return RestDetails
+}
+
+// GetRestLink returns RestLink for which logged user is the owner
+func GetRestLink(request *http.Request) string {
+	var RestLink string
+
+	owner := GetUserName(request)
+
+	query := fmt.Sprintf("SELECT RestLink FROM restaurants WHERE RestOwner='%s'", owner)
+	row := db.QueryRow(query)
+
+	err := row.Scan(&RestLink)
+	if err != nil {
+		return ""
+	}
+
+	return RestLink
 }
