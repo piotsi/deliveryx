@@ -189,6 +189,35 @@
                 <p></p>
                 {{end}}
 
+                <form method="post" action="/itemadd/">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Name</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Item name" name="itemName" value="Item name">
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Item description" name="itemDescription" value="Item description">
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Price</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="0.00" name="itemPrice" value="0.00">
+                    <div class="input-group-append">
+                        <span class="input-group-text">PLN</span>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-success btn-lg">Add item</button>
+
+              </form>
+
               </div>
             </div>
           </div>

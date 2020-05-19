@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/schema"
 	"golang.org/x/crypto/bcrypt"
@@ -164,6 +165,34 @@ func ItemRemove(response http.ResponseWriter, request *http.Request) {
 	http.Redirect(response, request, "/account", http.StatusFound)
 }
 
+// ItemAdd adds new item specified in the request form
+func ItemAdd(response http.ResponseWriter, request *http.Request) {
+	// Get details from the request
+	details := new(Item)
+	err := request.ParseForm() // Parse POST form into request.PostForm and request.Form
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(details, request.PostForm) // Decode details from POST form of request to restaurant instance
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	itemLink := GenerateItemLink(details.ItemName)
+	restLink := GetRestLink(request)
+
+	// Change details in the database
+	query := fmt.Sprintf("INSERT INTO items (itemName, itemPrice, itemDescription, itemLink, restLink) VALUES ('%s', '%s', '%s', '%s', '%s')", details.ItemName, details.ItemPrice, details.ItemDescription, itemLink, restLink)
+	_, err = db.Query(query)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(response, request, "/account", http.StatusFound)
+}
+
 // GetRestaurantDetails obtains restaurant details of which logged user is the owner of
 func GetRestaurantDetails(request *http.Request) *Restaurant {
 	RestDetails := new(Restaurant)
@@ -192,4 +221,10 @@ func GetRestLink(request *http.Request) string {
 	}
 
 	return RestLink
+}
+
+func GenerateItemLink(name string) string {
+	name = strings.ToLower(name)
+	name = strings.Replace(name, " ", "-", -1)
+	return name
 }

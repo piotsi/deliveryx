@@ -23,6 +23,7 @@ func main() {
 	router.HandleFunc("/logoedit/", handlers.LogoEdit).Methods("POST")
 	router.HandleFunc("/itemedit/", handlers.ItemEdit).Methods("POST")
 	router.HandleFunc("/itemremove/", handlers.ItemRemove).Methods("POST")
+	router.HandleFunc("/itemadd/", handlers.ItemAdd).Methods("POST")
 	router.HandleFunc("/signmeout/", handlers.SignMeOut)
 	router.HandleFunc("/", handlers.IndexPageHandler)
 	router.HandleFunc("/signin/", handlers.SigninPageHandler)
