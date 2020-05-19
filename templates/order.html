@@ -53,7 +53,7 @@
                     <div class="tab-pane fade" id="{{.ItemLink}}" role="tabpanel" aria-labelledby="list-{{.ItemLink}}-list">
                         <h3><p class="font-weight-light">{{.ItemDescription}}</p></h3>
                         <h5><p class="font-italic">{{.ItemPrice}}PLN</p></h5>
-                        <form class="form-inline">
+                        <form method="post" action="/basketadd" class="form-inline">
                           <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quantity</label>
                           <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
                             <option selected value="1">1</option>

@@ -225,6 +225,7 @@ func GetRestLink(request *http.Request) string {
 	return RestLink
 }
 
+// GenerateItemLink generates link for the new item
 func GenerateItemLink(name string) string {
 	name = strings.ToLower(name)
 	name = strings.Replace(name, " ", "-", -1)

@@ -10,7 +10,6 @@ import (
 	"github.com/gorilla/schema"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
-	// "github.com/gorilla/securecookie"
 )
 
 // Credentials stores authentication data
