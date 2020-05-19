@@ -130,8 +130,10 @@ func ItemEdit(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	restLink := GetRestLink(request)
+
 	// Change details in the database
-	query := fmt.Sprintf("UPDATE items SET ItemName='%s', ItemPrice='%s', ItemDescription='%s' WHERE ItemLink='%s'", details.ItemName, details.ItemPrice, details.ItemDescription, details.ItemLink)
+	query := fmt.Sprintf("UPDATE items SET ItemName='%s', ItemPrice='%s', ItemDescription='%s' WHERE ItemLink='%s' AND RestLink='%s'", details.ItemName, details.ItemPrice, details.ItemDescription, details.ItemLink, restLink)
 	_, err = db.Query(query)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -184,7 +186,7 @@ func ItemAdd(response http.ResponseWriter, request *http.Request) {
 	restLink := GetRestLink(request)
 
 	// Change details in the database
-	query := fmt.Sprintf("INSERT INTO items (itemName, itemPrice, itemDescription, itemLink, restLink) VALUES ('%s', '%s', '%s', '%s', '%s')", details.ItemName, details.ItemPrice, details.ItemDescription, itemLink, restLink)
+	query := fmt.Sprintf("INSERT INTO items (ItemName, ItemPrice, ItemDescription, ItemLink, RestLink) VALUES ('%s', '%s', '%s', '%s', '%s')", details.ItemName, details.ItemPrice, details.ItemDescription, itemLink, restLink)
 	_, err = db.Query(query)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
