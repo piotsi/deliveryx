@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"log"
 	"net/http"
 	"site/handlers"
@@ -10,10 +11,14 @@ import (
 
 func main() {
 	// Gorilla mux router, StrictSlash() adds trailing slash to the end of path
+	// Note: I don't know if it is caused by this func but you need to add trailing slash to action attribute link e.g. action="/page/"
 	router := mux.NewRouter().StrictSlash(true)
 
 	// Database initialization
 	handlers.InitDB("root:mysqlPSWD213@(127.0.0.1:3306)/root")
+
+	// Register basket for the session
+	gob.Register(&handlers.Basket{})
 
 	// Handlers, Methods() accepts only matched methods
 	router.HandleFunc("/signmein/", handlers.SignIn).Methods("POST")
@@ -24,6 +29,7 @@ func main() {
 	router.HandleFunc("/itemedit/", handlers.ItemEdit).Methods("POST")
 	router.HandleFunc("/itemremove/", handlers.ItemRemove).Methods("POST")
 	router.HandleFunc("/itemadd/", handlers.ItemAdd).Methods("POST")
+	router.HandleFunc("/basketadd/", handlers.BasketAdd).Methods("POST")
 	router.HandleFunc("/signmeout/", handlers.SignMeOut)
 	router.HandleFunc("/", handlers.IndexPageHandler)
 	router.HandleFunc("/signin/", handlers.SigninPageHandler)
