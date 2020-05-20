@@ -1,3 +1,3 @@
 # DeliveryX
 
-Simple app made with help of Gorilla toolkit.
+App for online food ordering made with the help of Gorilla toolkit.
