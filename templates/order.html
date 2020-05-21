@@ -66,6 +66,22 @@
                 </div>
             </div>
         </div>
+        {{if .Basket.RestLink}}
+            <div class="py-5 text-center">
+                <h3>Your items</h3>
+            </div>
+            <small>Click on the item to remove it.</small>
+
+            <ul class="list-group">
+                {{range .Basket.Items}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{.ItemName}}
+                    <span class="badge badge-primary badge-pill">{{.ItemPrice}} PLN</span>
+                </li>
+                {{end}}
+            </ul>
+            <h3>{{.Basket.TotalAmount}}</h3>
+        {{end}}
 </div>
 </body>
 

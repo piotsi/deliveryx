@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/schema"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Basket holds items added to basket from specified restaurant
@@ -14,6 +15,7 @@ type Basket struct {
 	RestLink    string
 	Items       []Item
 	TotalAmount string
+	UserName    string
 }
 
 // BasketAdd adds items to the basket
@@ -50,9 +52,9 @@ func BasketAdd(response http.ResponseWriter, request *http.Request) {
 	if session.Values["basket"] == nil {
 		basket.RestLink = details.RestLink
 		basket.TotalAmount = "0.00"
+		basket.UserName = GetUserName(request)
 		session.Values["basket"] = basket
 	}
-	// Add here ability to clearing the basket if you add something from another restaurant
 
 	// Retrieve basket
 	basket = session.Values["basket"].(*Basket)
@@ -88,6 +90,21 @@ func BasketAdd(response http.ResponseWriter, request *http.Request) {
 
 	http.Redirect(response, request, fmt.Sprintf("/order/%s", details.RestLink), http.StatusFound)
 	// http.Redirect(response, request, "/basket", http.StatusFound)
+}
+
+// GetBasket returns basket contents for given session
+func GetBasket(request *http.Request) *Basket {
+	// Get a session
+	session, err := store.Get(request, "session")
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	basket := new(Basket)
+
+	mapstructure.Decode(session.Values["basket"], basket)
+
+	return basket
 }
 
 // CalculateTotalAmount calculates total amount for prducts in the basket

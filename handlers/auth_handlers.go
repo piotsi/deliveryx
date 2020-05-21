@@ -24,8 +24,16 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 func SignIn(response http.ResponseWriter, request *http.Request) {
 	session, err := store.Get(request, "session")
 	if err != nil {
-		http.Error(response, err.Error(), http.StatusInternalServerError)
-		return
+		log.Println(err.Error())
+		// http.Error(response, err.Error(), http.StatusInternalServerError)
+		// return
+	}
+
+	// Session options
+	session.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400 * 1 / 24,
+		HttpOnly: true,
 	}
 
 	// Get credentials from the request
@@ -127,8 +135,9 @@ func SignMeOut(response http.ResponseWriter, request *http.Request) {
 func GetUserName(request *http.Request) (UserName string) {
 	session, err := store.Get(request, "session")
 	if err != nil {
-		log.Fatal(err.Error())
-		return
+		log.Println(err.Error())
+		// http.Error(response, err.Error(), http.StatusInternalServerError)
+		// return
 	}
 	if session.Values["authenticated"] == true {
 		return session.Values["username"].(string)
