@@ -59,30 +59,46 @@
                           <input type="hidden" name="itemLink" value="{{.ItemLink}}">
                           <input type="hidden" name="restLink" value="{{.RestLink}}">
 
-                          <button type="submit" class="btn btn-primary my-1">Add to basket</button>
+                          <button type="submit" class="btn btn-success my-1">Add to basket</button>
                         </form>
                     </div>
                     {{end}}
                 </div>
             </div>
         </div>
-        {{if .Basket.RestLink}}
+        {{if .Username}}
+        {{if .Basket.Items}}
             <div class="py-5 text-center">
                 <h3>Your items</h3>
             </div>
-            <small>Click on the item to remove it.</small>
-
-            <ul class="list-group">
-                {{range .Basket.Items}}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{.ItemName}}
-                    <span class="badge badge-primary badge-pill">{{.ItemPrice}} PLN</span>
-                </li>
+            <div class="list-group">
+                {{range $item, $amount := .Basket.Items}}
+                <form action="/basketremove/" method="post" id="basketremoveform">
+                    <input type="hidden" name="itemLink" value="{{$item.ItemLink}}">
+                    <input type="hidden" name="itemName" value="{{$item.ItemName}}">
+                    <input type="hidden" name="itemPrice" value="{{$item.ItemPrice}}">
+                </form>
+                <button type="submit" form="basketremoveform" class="list-group-item list-group-item-action" data-toggle="tooltip" data-placement="right" title="Click to remove">
+                    {{$item.ItemName}}
+                     <span class="badge badge-primary badge-pill">{{$amount}} x {{$item.ItemPrice}} PLN</span>
+                </button>
                 {{end}}
-            </ul>
-            <h3>{{.Basket.TotalAmount}}</h3>
+            </div>
+            <small>Adding items from other restaurants will empty your cart.</small>
+            <p></p>
+            <a href="/basketempty" class="btn btn-outline-danger btn-lg" role="button">Empty basket</a>
+            <div class="btn-group float-right" role="group" aria-label="Basket">
+                <button type="button" class="btn btn-outline-success disabled btn-lg">{{.Basket.TotalAmount}} PLN</button>
+                <a href="#" class="btn btn-success btn-lg" role="button">Order</a>
+            </div>
+        {{end}}
         {{end}}
 </div>
+<script type="text/javascript">
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 </body>
 
 </html>
