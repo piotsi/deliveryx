@@ -39,6 +39,9 @@
     </nav>
     <p></p>
     <div class="container">
+        <div class="py-5 text-center">
+            <h2>{{.RestName}}</h2>
+        </div>
         <div class="row">
             <div class="col-6">
                 <div class="list-group" id="list-tab" role="tablist">
@@ -69,7 +72,7 @@
         {{if .Username}}
         {{if .Basket.Items}}
             <div class="py-5 text-center">
-                <h3>Your items</h3>
+                <h4>Your items</h4>
             </div>
             <div class="list-group">
                 {{range $item, $amount := .Basket.Items}}
@@ -91,6 +94,10 @@
                 <button type="button" class="btn btn-outline-success disabled btn-lg">{{.Basket.TotalAmount}} PLN</button>
                 <a href="#" class="btn btn-success btn-lg" role="button">Order</a>
             </div>
+        {{else}}
+        <div class="py-5 text-center">
+            <h4>Your basket is empty</h4>
+        </div>
         {{end}}
         {{end}}
 </div>

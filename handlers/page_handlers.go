@@ -56,7 +56,7 @@ func OrderPageHandler(response http.ResponseWriter, request *http.Request) {
 
 	basket := GetBasket(request)
 
-	err = templates.ExecuteTemplate(response, "order.html", map[string]interface{}{"Username": GetUserName(request), "Menu": menu, "Basket": basket}) // Execute parsed template
+	err = templates.ExecuteTemplate(response, "order.html", map[string]interface{}{"Username": GetUserName(request), "Menu": menu, "Basket": basket, "RestName": GetRestName(request)}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)

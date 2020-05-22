@@ -1,6 +1,12 @@
 package handlers
 
-import "log"
+import (
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 // Restaurant holds restaurant inforamtion
 type Restaurant struct {
@@ -8,7 +14,7 @@ type Restaurant struct {
 	RestName    string
 	RestAddress string
 	RestLink    string
-	RestOwner 	string
+	RestOwner   string
 }
 
 // GetRestaurants returns restaurants list
@@ -36,4 +42,21 @@ func GetRestaurants() ([]*Restaurant, error) {
 		return nil, err
 	}
 	return rests, nil
+}
+
+// GetRestName returns restaurant name
+func GetRestName(request *http.Request) string {
+	var restName string
+
+	vars := mux.Vars(request)
+	query := fmt.Sprintf("SELECT restName FROM restaurants WHERE restLink='%s'", vars["RestLink"])
+
+	row := db.QueryRow(query)
+	err := row.Scan(&restName)
+	if err != nil {
+		log.Fatal(err.Error())
+		return ""
+	}
+
+	return restName
 }
