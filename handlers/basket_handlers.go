@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/schema"
@@ -16,6 +19,13 @@ type Basket struct {
 	Items       map[Item]int
 	TotalAmount string
 	UserName    string
+}
+
+// Orders holds order details
+type Orders struct {
+	ItemsInfo   map[string]int `json:"itemsInfo"`
+	Buyer       string         `json:"buyer"`
+	TotalAmount string         `json:"totalAmount"`
 }
 
 // BasketAdd adds items to the basket
@@ -193,7 +203,35 @@ func BasketRemove(response http.ResponseWriter, request *http.Request) {
 
 // BasketSendOrder sends users order to the restaurant and clears their basket
 func BasketSendOrder(response http.ResponseWriter, request *http.Request) {
-	http.Redirect(response, request, "/account", http.StatusFound)
+	// Get a session
+	session, err := store.Get(request, "session")
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Retrieve basket
+	basket := session.Values["basket"].(*Basket)
+
+	// Fill the order struct with essential data
+	orders := &Orders{
+		Buyer:       basket.UserName,
+		TotalAmount: basket.TotalAmount,
+	}
+
+	orders.ItemsInfo = make(map[string]int)
+
+	for item, amount := range basket.Items {
+		orders.ItemsInfo[item.ItemName] = amount
+	}
+
+	// Save basket to json file
+	file, _ := json.MarshalIndent(orders, "", "	")
+	log.Println(string(file))
+	fileName := fmt.Sprintf("orders/%s.json", basket.RestLink)
+	ioutil.WriteFile(fileName, file, os.ModePerm)
+
+	BasketEmpty(response, request)
 }
 
 // CalculateTotalAmount calculates total amount for prducts in the basket

@@ -182,7 +182,7 @@ func ItemAdd(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	itemLink := GenerateItemLink(details.ItemName)
+	itemLink := GenerateItemLink(request, details.ItemName)
 	restLink := GetRestLink(request)
 
 	// Change details in the database
@@ -226,8 +226,9 @@ func GetRestLink(request *http.Request) string {
 }
 
 // GenerateItemLink generates link for the new item
-func GenerateItemLink(name string) string {
+func GenerateItemLink(request *http.Request, name string) string {
 	name = strings.ToLower(name)
 	name = strings.Replace(name, " ", "-", -1)
+	name = GetRestLink(request) + "-" + name
 	return name
 }
