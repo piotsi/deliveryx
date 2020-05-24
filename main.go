@@ -32,12 +32,14 @@ func main() {
 	router.HandleFunc("/basketadd/", handlers.BasketAdd).Methods("POST")
 	router.HandleFunc("/basketremove/", handlers.BasketRemove).Methods("POST")
 	router.HandleFunc("/basketempty/", handlers.BasketEmpty)
+	router.HandleFunc("/sendorder/", handlers.BasketSendOrder)
 	router.HandleFunc("/signmeout/", handlers.SignMeOut)
 	router.HandleFunc("/", handlers.IndexPageHandler)
 	router.HandleFunc("/login/", handlers.LoginPageHandler)
 	router.HandleFunc("/order/", handlers.RestaurantsPageHandler)
 	router.HandleFunc("/order/{RestLink}/", handlers.OrderPageHandler)
 	router.HandleFunc("/account/", handlers.AccountPageHandler)
+	router.HandleFunc("/orders/", handlers.OrdersPageHandler)
 
 	// Static handlers
 	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./images/")))) // Handle static files in images folder

@@ -33,6 +33,9 @@
             {{if .Basket.Items}}
             <a class="btn btn-outline-secondary" href="/order/{{.Basket.RestLink}}" role="button">Basket</a>
             {{end}}
+            {{if .Restaurant.RestName}}
+            <a class="btn btn-outline-secondary" href="/orders/" role="button">Orders</a>
+            {{end}}
             <a class="btn btn-secondary" href="/account" role="button">{{.Username}}</a>
             <a class="btn btn-secondary" href="/signmeout" role="button">Sign-out</a>
             {{else}}
@@ -95,7 +98,7 @@
             <a href="/basketempty" class="btn btn-outline-danger btn-lg" role="button">Empty basket</a>
             <div class="btn-group float-right" role="group" aria-label="Basket">
                 <button type="button" class="btn btn-outline-success disabled btn-lg">{{.Basket.TotalAmount}} PLN</button>
-                <a href="#" class="btn btn-success btn-lg" role="button">Order</a>
+                <a href="/sendorder" class="btn btn-success btn-lg" role="button">Order</a>
             </div>
         {{else}}
         <div class="py-5 text-center">

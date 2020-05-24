@@ -191,6 +191,11 @@ func BasketRemove(response http.ResponseWriter, request *http.Request) {
 	http.Redirect(response, request, fmt.Sprintf("/order/%s", basket.RestLink), http.StatusFound)
 }
 
+// BasketSendOrder sends users order to the restaurant and clears their basket
+func BasketSendOrder(response http.ResponseWriter, request *http.Request) {
+	http.Redirect(response, request, "/account", http.StatusFound)
+}
+
 // CalculateTotalAmount calculates total amount for prducts in the basket
 func CalculateTotalAmount(basket *Basket) {
 	total := 0.00
