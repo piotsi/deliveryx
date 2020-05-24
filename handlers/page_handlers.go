@@ -36,7 +36,10 @@ func RestaurantsPageHandler(response http.ResponseWriter, request *http.Request)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = templates.ExecuteTemplate(response, "restaurants.html", map[string]interface{}{"Username": GetUserName(request), "Rest": rests}) // Execute parsed template
+
+	basket := GetBasket(request)
+
+	err = templates.ExecuteTemplate(response, "restaurants.html", map[string]interface{}{"Username": GetUserName(request), "Rest": rests, "Basket": basket}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate(): %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -77,7 +80,9 @@ func AccountPageHandler(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = templates.ExecuteTemplate(response, "account.html", map[string]interface{}{"Username": GetUserName(request), "Restaurant": GetRestaurantDetails(request), "Item": item}) // Execute parsed template
+	basket := GetBasket(request)
+
+	err = templates.ExecuteTemplate(response, "account.html", map[string]interface{}{"Username": GetUserName(request), "Restaurant": GetRestaurantDetails(request), "Item": item, "Basket": basket}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)

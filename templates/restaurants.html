@@ -16,6 +16,9 @@
 <a class="navbar-brand mb-0 h1" href=/order>DeliveryX</a>
 <div class=btn-group role=group aria-label=...>
 {{if .Username}}
+{{if .Basket.Items}}
+<a class="btn btn-outline-secondary" href="/order/{{.Basket.RestLink}}" role="button">Basket</a>
+{{end}}
 <a class="btn btn-secondary" href=/account role=button>{{.Username}}</a>
 <a class="btn btn-secondary" href=/signmeout role=button>Sign-out</a>
 {{else}}
