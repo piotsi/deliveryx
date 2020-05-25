@@ -1,117 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang=en>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../images/favicon.ico" />
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/style.css" />
-    <title>Order from {{.RestName}}</title>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<link rel=icon href=../../images/favicon.ico />
+<link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css integrity=sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm crossorigin=anonymous>
+<link rel=stylesheet href=../../css/style.css />
+<title>Order from {{.RestName}}</title>
 </head>
-
 <body>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
-    <!-- Body -->
-    <nav class="navbar navbar-light bg-light justify-content-between sticky-top">
-        <a class="navbar-brand mb-0 h1" href="/order">DeliveryX</a>
-        <div class="btn-group" role="group" aria-label="...">
-            {{if .Username}}
-            {{if .Basket.Items}}
-            <a class="btn btn-outline-secondary" href="/order/{{.Basket.RestLink}}" role="button">Basket</a>
-            {{end}}
-            {{if .Restaurant.RestName}}
-            <a class="btn btn-outline-secondary" href="/orders/" role="button">Orders</a>
-            {{end}}
-            <a class="btn btn-secondary" href="/account" role="button">{{.Username}}</a>
-            <a class="btn btn-secondary" href="/signmeout" role="button">Sign-out</a>
-            {{else}}
-            <a class="btn btn-secondary" href="/login" role="button">Sign-in</a>
-            {{end}}
-        </div>
-    </nav>
-    <p></p>
-    <div class="container">
-        <div class="py-5 text-center">
-            <h2>{{.RestName}}</h2>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="list-group" id="list-tab" role="tablist">
-                    {{range .Menu}}
-                    <a class="list-group-item list-group-item-action" id="list-{{.ItemLink}}-list" data-toggle="list" href="#{{.ItemLink}}" role="tab" aria-controls="{{.ItemLink}}">{{.ItemName}}</a>
-                    {{end}}
-                </div>
-            </div>
-                <div class="col-6">
-                <div class="tab-content" id="nav-tabContent">
-                    {{range .Menu}}
-                    <div class="tab-pane fade" id="{{.ItemLink}}" role="tabpanel" aria-labelledby="list-{{.ItemLink}}-list">
-                        <h3><p class="font-weight-light">{{.ItemDescription}}</p></h3>
-                        <h5><p class="font-italic">{{.ItemPrice}} PLN</p></h5>
-                        <form method="post" action="/basketadd/">
-                          <input type="hidden" name="itemName" value="{{.ItemName}}">
-                          <input type="hidden" name="itemPrice" value="{{.ItemPrice}}">
-                          <input type="hidden" name="itemLink" value="{{.ItemLink}}">
-                          <input type="hidden" name="restLink" value="{{.RestLink}}">
-
-                          <button type="submit" class="btn btn-success my-1">Add to basket</button>
-                        </form>
-                    </div>
-                    {{end}}
-                </div>
-            </div>
-        </div>
-        {{if .Username}}
-        {{if .Basket.Items}}
-            <div class="py-5 text-center">
-                <h4>Your items</h4>
-            </div>
-            <div class="list-group">
-                {{range $item, $amount := .Basket.Items}}
-                <form action="/basketremove/" method="post" id="basketremoveform">
-                    <input type="hidden" name="itemLink" value="{{$item.ItemLink}}">
-                    <input type="hidden" name="itemName" value="{{$item.ItemName}}">
-                    <input type="hidden" name="itemPrice" value="{{$item.ItemPrice}}">
-                </form>
-                <button type="submit" form="basketremoveform" class="list-group-item list-group-item-action" data-toggle="tooltip" data-placement="right" title="Click to remove">
-                    {{$item.ItemName}}
-                    <span class="badge badge-primary badge-pill">{{$amount}} x {{$item.ItemPrice}} PLN</span>
-                </button>
-                {{end}}
-            </div>
-            <small>Adding items from other restaurants will empty your cart.</small>
-            <p></p>
-            <a href="/basketempty" class="btn btn-outline-danger btn-lg" role="button">Empty basket</a>
-            <div class="btn-group float-right" role="group" aria-label="Basket">
-                <button type="button" class="btn btn-outline-success disabled btn-lg">{{.Basket.TotalAmount}} PLN</button>
-                <a href="/sendorder" class="btn btn-success btn-lg" role="button">Order</a>
-            </div>
-        {{else}}
-        <div class="py-5 text-center">
-            <h4>Your basket is empty</h4>
-        </div>
-        {{end}}
-        {{end}}
+<script src=https://code.jquery.com/jquery-3.2.1.slim.min.js integrity=sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js integrity=sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q crossorigin=anonymous></script>
+<script src=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js integrity=sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl crossorigin=anonymous></script>
+<nav class="navbar navbar-light bg-light justify-content-between sticky-top">
+<a class="navbar-brand mb-0 h1" href=/order>DeliveryX</a>
+<div class=btn-group role=group aria-label=...>
+{{if .Username}}
+{{if .Basket.Items}}
+<a class="btn btn-outline-secondary" href=/order/{{.Basket.RestLink}} role=button>Basket</a>
+{{end}}
+{{if .Restaurant.RestName}}
+<a class="btn btn-outline-secondary" href=/orders/ role=button>Orders</a>
+{{end}}
+<a class="btn btn-secondary" href=/account role=button>{{.Username}}</a>
+<a class="btn btn-secondary" href=/signmeout role=button>Sign-out</a>
+{{else}}
+<a class="btn btn-secondary" href=/login role=button>Sign-in</a>
+{{end}}
 </div>
-<script type="text/javascript">
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
-</script>
+</nav>
+<p></p>
+<div class=container>
+<div class="py-5 text-center">
+<h2>{{.RestName}}</h2>
+</div>
+<div class=row>
+<div class=col-6>
+<div class=list-group id=list-tab role=tablist>
+{{range .Menu}}
+<a class="list-group-item list-group-item-action" id=list-{{.ItemLink}}-list data-toggle=list href=#{{.ItemLink}} role=tab aria-controls={{.ItemLink}}>{{.ItemName}}</a>
+{{end}}
+</div>
+</div>
+<div class=col-6>
+<div class=tab-content id=nav-tabContent>
+{{range .Menu}}
+<div class="tab-pane fade" id={{.ItemLink}} role=tabpanel aria-labelledby=list-{{.ItemLink}}-list>
+<h3><p class=font-weight-light>{{.ItemDescription}}</p></h3>
+<h5><p class=font-italic>{{.ItemPrice}} PLN</p></h5>
+<form method=post action=/basketadd/>
+<input type=hidden name=itemName value={{.ItemName}}>
+<input type=hidden name=itemPrice value={{.ItemPrice}}>
+<input type=hidden name=itemLink value={{.ItemLink}}>
+<input type=hidden name=restLink value={{.RestLink}}>
+<button type=submit class="btn btn-success my-1">Add to basket</button>
+</form>
+</div>
+{{end}}
+</div>
+</div>
+</div>
+{{if .Username}}
+{{if .Basket.Items}}
+<div class="py-5 text-center">
+<h4>Your items</h4>
+</div>
+<div class=list-group>
+{{range $item, $amount := .Basket.Items}}
+<form action=/basketremove/ method=post id=basketremoveform>
+<input type=hidden name=itemLink value={{$item.ItemLink}}>
+<input type=hidden name=itemName value={{$item.ItemName}}>
+<input type=hidden name=itemPrice value={{$item.ItemPrice}}>
+</form>
+<button type=submit form=basketremoveform class="list-group-item list-group-item-action" data-toggle=tooltip data-placement=right title="Click to remove">
+{{$item.ItemName}}
+<span class="badge badge-primary badge-pill">{{$amount}} x {{$item.ItemPrice}} PLN</span>
+</button>
+{{end}}
+</div>
+<small>Adding items from other restaurants will empty your cart.</small>
+<p></p>
+<a href=/basketempty class="btn btn-outline-danger btn-lg" role=button>Empty basket</a>
+<div class="btn-group float-right" role=group aria-label=Basket>
+<button type=button class="btn btn-outline-success disabled btn-lg">{{.Basket.TotalAmount}} PLN</button>
+<a href=/sendorder class="btn btn-success btn-lg" role=button>Order</a>
+</div>
+{{else}}
+<div class="py-5 text-center">
+<h4>Your basket is empty</h4>
+</div>
+{{end}}
+{{end}}
+</div>
+<script type=text/javascript>$(function(){$('[data-toggle="tooltip"]').tooltip()});</script>
 </body>
-
 </html>
