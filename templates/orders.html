@@ -29,12 +29,13 @@
 <h2>Orders</h2>
 <small>Page refreshes every 15 seconds</small>
 </div>
+{{range $index, $order := .Orders}}
 <div class="card ">
   <div class="card-body">
-    <h5 class="card-title">Name: {{.Orders.Buyer}}</h5>
-    <p class="card-text">Total amount: {{.Orders.TotalAmount}} PLN</p>
+    <h5 class="card-title">Name: {{$order.Buyer}}</h5>
+    <p class="card-text">Total amount: {{$order.TotalAmount}} PLN</p>
     <ul class="list-group list-group">
-        {{range $item, $amount := .Orders.ItemsInfo}}
+        {{range $item, $amount := .ItemsInfo}}
         <li class="list-group-item">
             {{$item}}
             <span class="badge badge-primary badge-pill">{{$amount}}</span>
@@ -42,9 +43,14 @@
         {{end}}
     </ul>
     <p></p>
-    <a href="#" class="btn btn-lg btn-success btn-block">Complete order</a>
+    <form action="/ordercomplete/" method="post" id="form">
+        <input type="text" id="index" name="index" value="{{$index}}" hidden>
+    </form>
+    <button type="submit" class="btn btn-lg btn-success btn-block" form="form" value="Submit">Complete order</button>
   </div>
 </div>
+<p></p>
+{{end}}
 </div>
 </body>
 </html>

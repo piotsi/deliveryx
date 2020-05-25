@@ -21,8 +21,9 @@ type Basket struct {
 	UserName    string
 }
 
-// Orders holds order details
-type Orders struct {
+// Order holds order details
+type Order struct {
+	Completed   bool           `json:"completed"`
 	ItemsInfo   map[string]int `json:"itemsInfo"`
 	Buyer       string         `json:"buyer"`
 	TotalAmount string         `json:"totalAmount"`
@@ -214,24 +215,77 @@ func BasketSendOrder(response http.ResponseWriter, request *http.Request) {
 	basket := session.Values["basket"].(*Basket)
 
 	// Fill the order struct with essential data
-	orders := &Orders{
+	order := &Order{
 		Buyer:       basket.UserName,
 		TotalAmount: basket.TotalAmount,
 	}
 
-	orders.ItemsInfo = make(map[string]int)
+	order.ItemsInfo = make(map[string]int)
 
 	for item, amount := range basket.Items {
-		orders.ItemsInfo[item.ItemName] = amount
+		order.ItemsInfo[item.ItemName] = amount
 	}
 
-	// Save basket to json file
+	orders := OrdersGet(basket.RestLink)
+	orders = append(orders, order)
+
+	// Save order to a json file
 	file, _ := json.MarshalIndent(orders, "", "	")
-	log.Println(string(file))
 	fileName := fmt.Sprintf("orders/%s.json", basket.RestLink)
 	ioutil.WriteFile(fileName, file, os.ModePerm)
 
 	BasketEmpty(response, request)
+}
+
+// OrdersGet returns slice of orders
+func OrdersGet(restLink string) []*Order {
+	orders := make([]*Order, 0)
+
+	// Get orders from the file
+	path, _ := os.Getwd()
+	fileName := fmt.Sprintf(path+"/orders/%s.json", restLink)
+	file, _ := ioutil.ReadFile(fileName)
+	json.Unmarshal(file, &orders)
+
+	return orders
+}
+
+// OrderComplete moves an order to the file with completed orders
+func OrderComplete(response http.ResponseWriter, request *http.Request) {
+	// Get index from the form
+	index, _ := strconv.Atoi(request.FormValue("index"))
+
+	restLink := GetRestLink(request)
+	orders := OrdersGet(restLink)
+
+	// Remove element from orders and move it to completed orders
+	copy(orders[index:], orders[index+1:])
+	completedOrder := orders[len(orders)-1]
+	completedOrder.Completed = true
+	orders[len(orders)-1] = nil
+	orders = orders[:len(orders)-1]
+
+	// Save orders to json file
+	fileOrders, _ := json.MarshalIndent(orders, "", "	")
+	fileNameOrders := fmt.Sprintf("orders/%s.json", restLink)
+	ioutil.WriteFile(fileNameOrders, fileOrders, os.ModePerm)
+
+	ordersCompleted := make([]*Order, 0)
+
+	// Get completed orders from the file
+	path, _ := os.Getwd()
+	fileNameCompleted := fmt.Sprintf(path+"/orders/completed-%s.json", restLink)
+	file, _ := ioutil.ReadFile(fileNameCompleted)
+	json.Unmarshal(file, &ordersCompleted)
+
+	ordersCompleted = append(ordersCompleted, completedOrder)
+
+	// Save completed order to json file
+	fileCompleted, _ := json.MarshalIndent(ordersCompleted, "", "	")
+	fileNameCompleted = fmt.Sprintf("orders/completed-%s.json", restLink)
+	ioutil.WriteFile(fileNameCompleted, fileCompleted, os.ModePerm)
+
+	http.Redirect(response, request, "/orders", http.StatusFound)
 }
 
 // CalculateTotalAmount calculates total amount for prducts in the basket

@@ -1,12 +1,8 @@
 package handlers
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -103,15 +99,7 @@ func OrdersPageHandler(response http.ResponseWriter, request *http.Request) {
 
 	restLink := GetRestLink(request)
 
-	orders := new(Orders)
-
-	// Get orders from the file
-	path, _ := os.Getwd()
-	fileName := fmt.Sprintf(path+"/orders/%s.json", restLink)
-	file, _ := ioutil.ReadFile(fileName)
-	json.Unmarshal(file, &orders)
-
-	err := templates.ExecuteTemplate(response, "orders.html", map[string]interface{}{"Username": GetUserName(request), "Restaurant": GetRestaurantDetails(request), "Orders": orders}) // Execute parsed template
+	err := templates.ExecuteTemplate(response, "orders.html", map[string]interface{}{"Username": GetUserName(request), "Restaurant": GetRestaurantDetails(request), "Orders": OrdersGet(restLink)}) // Execute parsed template
 	if err != nil {
 		log.Fatalf("templates.ExecuteTemplate: %s", err)
 		http.Error(response, err.Error(), http.StatusInternalServerError)

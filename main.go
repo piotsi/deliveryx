@@ -31,6 +31,7 @@ func main() {
 	router.HandleFunc("/itemadd/", handlers.ItemAdd).Methods("POST")
 	router.HandleFunc("/basketadd/", handlers.BasketAdd).Methods("POST")
 	router.HandleFunc("/basketremove/", handlers.BasketRemove).Methods("POST")
+	router.HandleFunc("/ordercomplete/", handlers.OrderComplete).Methods("POST")
 	router.HandleFunc("/basketempty/", handlers.BasketEmpty)
 	router.HandleFunc("/sendorder/", handlers.BasketSendOrder)
 	router.HandleFunc("/signmeout/", handlers.SignMeOut)
