@@ -3,7 +3,7 @@
 <head>
 <meta charset=UTF-8>
 <meta name=viewport content="width=device-width, initial-scale=1.0">
-<meta http-equiv="refresh" content="15" />
+<meta http-equiv=refresh content=15 />
 <link rel=icon href=../../images/favicon.ico />
 <link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css integrity=sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm crossorigin=anonymous>
 <link rel=stylesheet href=../../css/style.css />
@@ -30,24 +30,24 @@
 <small>Page refreshes every 15 seconds</small>
 </div>
 {{range $index, $order := .Orders}}
-<div class="card ">
-  <div class="card-body">
-    <h5 class="card-title">Name: {{$order.Buyer}}</h5>
-    <p class="card-text">Total amount: {{$order.TotalAmount}} PLN</p>
-    <ul class="list-group list-group">
-        {{range $item, $amount := .ItemsInfo}}
-        <li class="list-group-item">
-            {{$item}}
-            <span class="badge badge-primary badge-pill">{{$amount}}</span>
-        </li>
-        {{end}}
-    </ul>
-    <p></p>
-    <form action="/ordercomplete/" method="post" id="form">
-        <input type="text" id="index" name="index" value="{{$index}}" hidden>
-    </form>
-    <button type="submit" class="btn btn-lg btn-success btn-block" form="form" value="Submit">Complete order</button>
-  </div>
+<div class=card>
+<div class=card-body>
+<h5 class=card-title>Name: {{$order.Buyer}}</h5>
+<p class=card-text>Total amount: {{$order.TotalAmount}} PLN</p>
+<ul class="list-group list-group">
+{{range $item, $amount := .ItemsInfo}}
+<li class=list-group-item>
+{{$item}}
+<span class="badge badge-primary badge-pill">{{$amount}}</span>
+</li>
+{{end}}
+</ul>
+<p></p>
+<form action=/ordercomplete/ method=post id=form>
+<input type=text id=index name=index value={{$index}} hidden>
+</form>
+<button type=submit class="btn btn-lg btn-success btn-block" form=form value=Submit>Complete order</button>
+</div>
 </div>
 <p></p>
 {{end}}

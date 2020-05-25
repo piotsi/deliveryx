@@ -1,237 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang=en>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../images/favicon.ico" />
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/style.css" />
-    <title>Account</title>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<link rel=icon href=../../images/favicon.ico />
+<link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css integrity=sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm crossorigin=anonymous>
+<link rel=stylesheet href=../../css/style.css />
+<title>Account</title>
 </head>
-
 <body>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
-    <!-- Body -->
-    <nav class="navbar navbar-light bg-light justify-content-between sticky-top">
-        <a class="navbar-brand mb-0 h1" href="/order">DeliveryX</a>
-        <div class="btn-group" role="group" aria-label="...">
-            {{if .Username}}
-            {{if .Basket.Items}}
-            <a class="btn btn-outline-secondary" href="/order/{{.Basket.RestLink}}" role="button">Basket</a>
-            {{end}}
-            {{if .Restaurant.RestName}}
-            <a class="btn btn-outline-secondary" href="/orders/" role="button">Orders</a>
-            {{end}}
-            <a class="btn btn-secondary" href="/account" role="button">{{.Username}}</a>
-            <a class="btn btn-secondary" href="/signmeout" role="button">Sign-out</a>
-            {{else}}
-            <a class="btn btn-secondary" href="/login" role="button">Sign-in</a>
-            {{end}}
-        </div>
-    </nav>
-    <p></p>
-    <div class="container">
-        <div class="accordion" id="accountEdit">
-          <div class="card">
-            <div class="card-header" id="headingOne">
-              <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true" aria-controls="collapseUser">
-                  Edit account
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseUser" class="collapse show" aria-labelledby="headingOne" data-parent="#accountEdit">
-              <div class="card-body">
-                  <form method="post" action="/accountedit/">
-                      <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">Login</span>
-                          </div>
-                              <input type="text" class="form-control" placeholder="{{.Username}}" name="userName" value="{{.Username}}" readonly>
-                      </div>
-
-                      <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">Password</span>
-                          </div>
-                          <input type="password" class="form-control" id="passwordControlForm" placeholder="New password" name="userPassword">
-                      </div>
-                      <small id="passwordHelpInline" class="text-muted">Password should be atleast 8 characters long.</small>
-
-                      <button type="submit" class="btn btn-success btn-lg btn-block">Edit details</button>
-                  </form>
-              </div>
-            </div>
-          </div>
-
-
-          {{if .Restaurant.RestName}}
-          <div class="card">
-            <div class="card-header" id="headingTwo">
-              <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseRestaurant" aria-expanded="false" aria-controls="collapseRestaurant">
-                  Edit your restaurant details
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseRestaurant" class="collapse" aria-labelledby="headingTwo" data-parent="#accountEdit">
-              <div class="card-body">
-                  <form method="post" action="/restaurantedit/">
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Name</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestName}}" name="restName" value="{{.Restaurant.RestName}}">
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Address</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestAddress}}" name="restAddress" value="{{.Restaurant.RestAddress}}">
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Link</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.Restaurant.RestLink}}" name="restLink" value="{{.Restaurant.RestLink}}" readonly>
-                    </div>
-
-                    <button type="submit" class="btn btn-success btn-lg btn-block">Edit details</button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="card">
-            <div class="card-header" id="headingThree">
-              <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseLogo" aria-expanded="false" aria-controls="collapseLogo">
-                  Edit your restaurant logo
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseLogo" class="collapse" aria-labelledby="headingThree" data-parent="#accountEdit">
-              <div class="card-body">
-                  <img src="../../images/restaurants/{{.Restaurant.RestLink}}.png" class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
-                  <form method="post" action="/logoedit/" enctype="multipart/form-data">
-                      <input type="hidden" name="imageLink" value="{{.Restaurant.RestLink}}">
-                      <div class="form-group">
-                          <input type="file" class="form-control-file" id="inputFile" name="imageFile" accept="/image/png">
-                      </div>
-                  <button type="submit" class="btn btn-success btn-lg btn-block" value="upload">Change logo</button>
-                  </form>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header" id="headingFour">
-              <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseItems" aria-expanded="false" aria-controls="collapseItems">
-                  Edit your restaurant items
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseItems" class="collapse" aria-labelledby="headingFour" data-parent="#accountEdit">
-              <div class="card-body">
-                  {{range .Item}}
-                  <form method="post" action="/itemedit/">
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Name</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.ItemName}}" name="itemName" value="{{.ItemName}}">
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Description</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.ItemDescription}}" name="itemDescription" value="{{.ItemDescription}}">
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Price</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.ItemPrice}}" name="itemPrice" value="{{.ItemPrice}}">
-                      <div class="input-group-append">
-                          <span class="input-group-text">PLN</span>
-                      </div>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text">Link</span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="{{.ItemLink}}" name="itemLink" value="{{.ItemLink}}" readonly>
-                    </div>
-
-                    <button type="submit" class="btn btn-success btn-lg">Edit item details</button>
-                    <button type="submit" class="btn btn-outline-danger btn-lg" formaction="/itemremove/">Remove item</button>
-                </form>
-
-                <p></p>
-                {{end}}
-
-                <form method="post" action="/itemadd/">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Name</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Item name" name="itemName" value="Item name">
-                  </div>
-
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Description</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Item description" name="itemDescription" value="Item description">
-                  </div>
-
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Price</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="0.00" name="itemPrice" value="0.00">
-                    <div class="input-group-append">
-                        <span class="input-group-text">PLN</span>
-                    </div>
-                  </div>
-
-                  <button type="submit" class="btn btn-success btn-lg">Add item</button>
-
-              </form>
-
-              </div>
-            </div>
-          </div>
-          {{end}}
-
-        </div>
-
-    </div>
+<script src=https://code.jquery.com/jquery-3.2.1.slim.min.js integrity=sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js integrity=sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q crossorigin=anonymous></script>
+<script src=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js integrity=sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl crossorigin=anonymous></script>
+<nav class="navbar navbar-light bg-light justify-content-between sticky-top">
+<a class="navbar-brand mb-0 h1" href=/order>DeliveryX</a>
+<div class=btn-group role=group aria-label=...>
+{{if .Username}}
+{{if .Basket.Items}}
+<a class="btn btn-outline-secondary" href=/order/{{.Basket.RestLink}} role=button>Basket</a>
+{{end}}
+{{if .Restaurant.RestName}}
+<a class="btn btn-outline-secondary" href=/orders/ role=button>Orders</a>
+{{end}}
+<a class="btn btn-secondary" href=/account role=button>{{.Username}}</a>
+<a class="btn btn-secondary" href=/signmeout role=button>Sign-out</a>
+{{else}}
+<a class="btn btn-secondary" href=/login role=button>Sign-in</a>
+{{end}}
+</div>
+</nav>
+<p></p>
+<div class=container>
+<div class=accordion id=accountEdit>
+<div class=card>
+<div class=card-header id=headingOne>
+<h2 class=mb-0>
+<button class="btn btn-link btn-block text-left" type=button data-toggle=collapse data-target=#collapseUser aria-expanded=true aria-controls=collapseUser>
+Edit account
+</button>
+</h2>
+</div>
+<div id=collapseUser class="collapse show" aria-labelledby=headingOne data-parent=#accountEdit>
+<div class=card-body>
+<form method=post action=/accountedit/>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Login</span>
+</div>
+<input type=text class=form-control placeholder={{.Username}} name=userName value={{.Username}} readonly>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Password</span>
+</div>
+<input type=password class=form-control id=passwordControlForm placeholder="New password" name=userPassword>
+</div>
+<small id=passwordHelpInline class=text-muted>Password should be atleast 8 characters long.</small>
+<button type=submit class="btn btn-success btn-lg btn-block">Edit details</button>
+</form>
+</div>
+</div>
+</div>
+{{if .Restaurant.RestName}}
+<div class=card>
+<div class=card-header id=headingTwo>
+<h2 class=mb-0>
+<button class="btn btn-link btn-block text-left" type=button data-toggle=collapse data-target=#collapseRestaurant aria-expanded=false aria-controls=collapseRestaurant>
+Edit your restaurant details
+</button>
+</h2>
+</div>
+<div id=collapseRestaurant class=collapse aria-labelledby=headingTwo data-parent=#accountEdit>
+<div class=card-body>
+<form method=post action=/restaurantedit/>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Name</span>
+</div>
+<input type=text class=form-control placeholder={{.Restaurant.RestName}} name=restName value={{.Restaurant.RestName}}>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Address</span>
+</div>
+<input type=text class=form-control placeholder={{.Restaurant.RestAddress}} name=restAddress value={{.Restaurant.RestAddress}}>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Link</span>
+</div>
+<input type=text class=form-control placeholder={{.Restaurant.RestLink}} name=restLink value={{.Restaurant.RestLink}} readonly>
+</div>
+<button type=submit class="btn btn-success btn-lg btn-block">Edit details</button>
+</form>
+</div>
+</div>
+</div>
+<div class=card>
+<div class=card-header id=headingThree>
+<h2 class=mb-0>
+<button class="btn btn-link btn-block text-left" type=button data-toggle=collapse data-target=#collapseLogo aria-expanded=false aria-controls=collapseLogo>
+Edit your restaurant logo
+</button>
+</h2>
+</div>
+<div id=collapseLogo class=collapse aria-labelledby=headingThree data-parent=#accountEdit>
+<div class=card-body>
+<img src=../../images/restaurants/{{.Restaurant.RestLink}}.png class="rounded mx-auto d-block img-thumbnail" alt="Restaurant logo">
+<form method=post action=/logoedit/ enctype=multipart/form-data>
+<input type=hidden name=imageLink value={{.Restaurant.RestLink}}>
+<div class=form-group>
+<input type=file class=form-control-file id=inputFile name=imageFile accept=/image/png>
+</div>
+<button type=submit class="btn btn-success btn-lg btn-block" value=upload>Change logo</button>
+</form>
+</div>
+</div>
+</div>
+<div class=card>
+<div class=card-header id=headingFour>
+<h2 class=mb-0>
+<button class="btn btn-link btn-block text-left" type=button data-toggle=collapse data-target=#collapseItems aria-expanded=false aria-controls=collapseItems>
+Edit your restaurant items
+</button>
+</h2>
+</div>
+<div id=collapseItems class=collapse aria-labelledby=headingFour data-parent=#accountEdit>
+<div class=card-body>
+{{range .Item}}
+<form method=post action=/itemedit/>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Name</span>
+</div>
+<input type=text class=form-control placeholder={{.ItemName}} name=itemName value={{.ItemName}}>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Description</span>
+</div>
+<input type=text class=form-control placeholder={{.ItemDescription}} name=itemDescription value={{.ItemDescription}}>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Price</span>
+</div>
+<input type=text class=form-control placeholder={{.ItemPrice}} name=itemPrice value={{.ItemPrice}}>
+<div class=input-group-append>
+<span class=input-group-text>PLN</span>
+</div>
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Link</span>
+</div>
+<input type=text class=form-control placeholder={{.ItemLink}} name=itemLink value={{.ItemLink}} readonly>
+</div>
+<button type=submit class="btn btn-success btn-lg">Edit item details</button>
+<button type=submit class="btn btn-outline-danger btn-lg" formaction=/itemremove/>Remove item</button>
+</form>
+<p></p>
+{{end}}
+<form method=post action=/itemadd/>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Name</span>
+</div>
+<input type=text class=form-control placeholder="Item name" name=itemName value="Item name">
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Description</span>
+</div>
+<input type=text class=form-control placeholder="Item description" name=itemDescription value="Item description">
+</div>
+<div class="input-group mb-3">
+<div class=input-group-prepend>
+<span class=input-group-text>Price</span>
+</div>
+<input type=text class=form-control placeholder=0.00 name=itemPrice value=0.00>
+<div class=input-group-append>
+<span class=input-group-text>PLN</span>
+</div>
+</div>
+<button type=submit class="btn btn-success btn-lg">Add item</button>
+</form>
+</div>
+</div>
+</div>
+{{end}}
+</div>
+</div>
 </body>
-
 </html>
