@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// Gorilla mux router, StrictSlash() adds trailing slash to the end of path
+	// Gorilla mux router, StrictSlash() adds trailing slash to the end of the url path
 	// Note: I don't know if it is caused by this func but you need to add trailing slash to action attribute link e.g. action="/page/"
 	router := mux.NewRouter().StrictSlash(true)
 
