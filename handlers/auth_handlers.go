@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/schema"
 	"github.com/gorilla/sessions"
@@ -17,9 +18,7 @@ type Credentials struct {
 	UserPassword string `db:"userPassword"`
 }
 
-// SessionKey is parsed from the flag
-var SessionKey string
-var store = sessions.NewCookieStore([]byte(SessionKey))
+var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // SignIn handles /signmein
 func SignIn(response http.ResponseWriter, request *http.Request) {
