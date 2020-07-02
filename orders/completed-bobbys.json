@@ -14,5 +14,66 @@
 		},
 		"buyer": "test101",
 		"totalAmount": "0.00"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Pepperoni": 1
+		},
+		"buyer": "test101",
+		"totalAmount": "9.99"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Truffles": 1,
+			"Water": 1
+		},
+		"buyer": "test103",
+		"totalAmount": "32.58"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Truffles": 1,
+			"Water": 1
+		},
+		"buyer": "test103",
+		"totalAmount": "32.58"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Carbonara": 1,
+			"Water": 1
+		},
+		"buyer": "test102",
+		"totalAmount": "19.62"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Pizza": 1,
+			"Water": 1
+		},
+		"buyer": "test101",
+		"totalAmount": "23.99"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Pizza": 1,
+			"Water": 1
+		},
+		"buyer": "test101",
+		"totalAmount": "23.99"
+	},
+	{
+		"completed": true,
+		"itemsInfo": {
+			"Pepperoni": 1
+		},
+		"buyer": "test102",
+		"totalAmount": "9.99"
 	}
 ]
